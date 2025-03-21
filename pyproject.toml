@@ -11,6 +11,8 @@ pydantic = "^2.10.6"
 pydantic-settings = "^2.8.1"
 httpx = "^0.28.1"
 openai = "^1.68.2"
+fastapi = "^0.115.11"
+uvicorn = {extras = ["standard"], version = "^0.34.0"}
 
 
 [build-system]

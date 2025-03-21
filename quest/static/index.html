@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Interface</title>
+    <script>
+        let chatContext = [];
+
+        function sendMessage() {
+            let userInput = document.getElementById("userInput").value.trim();
+            if (!userInput) return;
+            
+            chatContext.push(userInput);
+            
+            fetch("/api/game1/do", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    text: userInput,
+                    context: chatContext
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                let chatBox = document.getElementById("chatBox");
+                chatBox.innerHTML += `<p><strong>You:</strong> ${userInput}</p>`;
+                chatBox.innerHTML += `<p><strong>Server:</strong> ${data.text}</p>`;
+                document.getElementById("userInput").value = "";
+            })
+            .catch(error => console.error("Error:", error));
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            document.getElementById("userInput").addEventListener("keypress", function(event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    sendMessage();
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <h2>Chat Interface</h2>
+    <div id="chatBox" style="border:1px solid #ccc; padding:10px; width:300px; height:200px; overflow:auto;"></div>
+    <input type="text" id="userInput" placeholder="Type a message...">
+    <button onclick="sendMessage()">Send</button>
+</body>
+</html>

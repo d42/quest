@@ -22,6 +22,7 @@ else:
 
 
 class Config(BaseSettings):
+    PROJECT_NAME: str = "quest"
     HEURIST_API: str
     HEURIST_URL: str = "https://llm-gateway.heurist.xyz"
     TEXT_MODEL: str = "hermes-3-llama3.1-8b"
