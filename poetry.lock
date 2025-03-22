@@ -729,6 +729,7 @@ files = [
 
 [package.dependencies]
 anyio = ">=3.6.2,<5"
+typing-extensions = {version = ">=3.10.0", markers = "python_version < \"3.10\""}
 
 [package.extras]
 full = ["httpx (>=0.27.0,<0.29.0)", "itsdangerous", "jinja2", "python-multipart (>=0.0.18)", "pyyaml"]
@@ -1046,5 +1047,5 @@ files = [
 
 [metadata]
 lock-version = "2.0"
-python-versions = "^3.10"
-content-hash = "5a1b0375142be615f336979aa52f30333ea0289e8703a8df139d5e979c068156"
+python-versions = ">=3.9"
+content-hash = "52bebe7380ec1d923005c7e01030a9e4130bc24f52afb607ff73b6cf48ed3668"
