@@ -8,7 +8,7 @@ api_router = APIRouter()
 
 @api_router.get("/", response_class=HTMLResponse)
 def index():
-    with open("quest/static/index.html") as f:
+    with open("quest/templates/gameplay.html") as f:
         return f.read()
 
 

@@ -3,6 +3,7 @@ from logging import getLogger
 
 from fastapi import FastAPI
 from fastapi import Request
+from fastapi.staticfiles import StaticFiles
 from fastapi.responses import JSONResponse
 from quest.core.config import settings
 
@@ -22,6 +23,7 @@ def get_default_app() -> FastAPI:
     openapi_url = None
     app = FastAPI(title=settings.PROJECT_NAME, openapi_url=openapi_url)
     app.include_router(api_router)
+    app.mount("/static", StaticFiles(directory="quest/static"), name="static")
 
     default_app = app
     return app
