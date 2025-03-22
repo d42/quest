@@ -393,29 +393,39 @@
 .TOPIC-PAGE .boxleft-back-TP {
     position: absolute;
     width: 444px;
+    display: flex;
     height: 89px;
     top: 90px;
     left: 178px;
     border: 8px solid;
     border-color: #3625ce;
+    align-items: center;
+    justify-content: center;
 }
+
 
 .TOPIC-PAGE .boxr-TP {
     position: absolute;
     width: 444px;
     height: 89px;
+    display: flex;
     top: 90px;
     left: 819px;
     border: 8px solid;
     border-color: #3625ce;
+    align-items: center;
+    justify-content: center;
 }
 
 .TOPIC-PAGE .boxbotton-TP {
     position: absolute;
+    display: flex;
     width: 1085px;
     height: 89px;
     top: 775px;
     left: 178px;
     border: 8px solid;
     border-color: #3625ce;
+    align-items: center;
+    justify-content: center;
 }

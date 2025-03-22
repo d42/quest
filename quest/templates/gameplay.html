@@ -2,8 +2,8 @@
 <html>
     <head>
         <meta charset="utf-8" />
-        <link rel="stylesheet" href="static/global.css" />
-        <link rel="stylesheet" href="static/style.css" />
+        <link rel="stylesheet" href="/static/global.css" />
+        <link rel="stylesheet" href="/static/style.css" />
     </head>
     <body>
         <div class="GAME-PAGE">
@@ -12,35 +12,39 @@
                     <div class="outputcontent-frame">
                         <div class="outputcontent" id="content">
                             <p class="output-content-text">
-                                Once upon a time in a town called Coinville, little Billy found a strange-looking coin under his bed. It
-                                wasn’t gold or silver—it was glowing! He ran to his grandpa, Mr. Satoshi, and asked, “What is this?”<br />Mr.
-                                Satoshi chuckled. “That, Billy, is a magic internet coin! Some people call it crypto.”<br />Billy’s eyes
-                                widened. “Magic? Like fairy dust?”<br /><br />“Not exactly,” said Grandpa. “It’s magic, but with math!
-                                Let me show you how it works.”<br /><br />Chapter 1: How Do We Know the Coins Are Real? Grandpa Satoshi
-                                showed Billy a giant book. “Imagine this book records every magic coin in Coinville. It’s called the
-                                blockchain—a list of all the coins and who owns them.”<br />Billy frowned. “But what if someone erases a
-                                page and writes their name instead?”<br />Grandpa smiled. “Good question! The book isn’t kept by just
-                                one person—it’s copied and shared with everyone! If someone tries to cheat, the others won’t let
-                                them.”<br />Question: What do you think happens when someone tries to change the book? A) The book
-                                corrects itself. B) The magic coins disappear. C) Everyone in Coinville gets a pet dragon
+                            {{intro_text}}
                             </p>
-                            <div class="output-content-image"></div>
-                            <p class="text-wrapper">
-                                Chapter 2: Where Do the Coins Come From? Billy scratched his head. “But where do magic internet coins
-                                come from?”<br />Grandpa pulled out a shovel. “We mine them, like treasure!”<br />Billy gasped. “You dig
-                                for them? In the backyard?!”<br />Grandpa laughed. “Not quite. Miners use computers to solve puzzles,
-                                and when they solve one, they unlock new coins. It’s like a game!”<br />Question: What do miners need to
-                                find magic coins? A) A shovel and flashlight. B) A computer and electricity. C) A secret map drawn by a
-                                pirate.
-                            </p>
+
+                            <!-- <p class="output-content-text"> -->
+                            <!--     Once upon a time in a town called Coinville, little Billy found a strange-looking coin under his bed. It -->
+                            <!--     wasn’t gold or silver—it was glowing! He ran to his grandpa, Mr. Satoshi, and asked, “What is this?”<br />Mr. -->
+                            <!--     Satoshi chuckled. “That, Billy, is a magic internet coin! Some people call it crypto.”<br />Billy’s eyes -->
+                            <!--     widened. “Magic? Like fairy dust?”<br /><br />“Not exactly,” said Grandpa. “It’s magic, but with math! -->
+                            <!--     Let me show you how it works.”<br /><br />Chapter 1: How Do We Know the Coins Are Real? Grandpa Satoshi -->
+                            <!--     showed Billy a giant book. “Imagine this book records every magic coin in Coinville. It’s called the -->
+                            <!--     blockchain—a list of all the coins and who owns them.”<br />Billy frowned. “But what if someone erases a -->
+                            <!--     page and writes their name instead?”<br />Grandpa smiled. “Good question! The book isn’t kept by just -->
+                            <!--     one person—it’s copied and shared with everyone! If someone tries to cheat, the others won’t let -->
+                            <!--     them.”<br />Question: What do you think happens when someone tries to change the book? A) The book -->
+                            <!--     corrects itself. B) The magic coins disappear. C) Everyone in Coinville gets a pet dragon -->
+                            <!-- </p> -->
+                            <!-- <div class="output-content-image"></div> -->
+                            <!-- <p class="text-wrapper"> -->
+                            <!--     Chapter 2: Where Do the Coins Come From? Billy scratched his head. “But where do magic internet coins -->
+                            <!--     come from?”<br />Grandpa pulled out a shovel. “We mine them, like treasure!”<br />Billy gasped. “You dig -->
+                            <!--     for them? In the backyard?!”<br />Grandpa laughed. “Not quite. Miners use computers to solve puzzles, -->
+                            <!--     and when they solve one, they unlock new coins. It’s like a game!”<br />Question: What do miners need to -->
+                            <!--     find magic coins? A) A shovel and flashlight. B) A computer and electricity. C) A secret map drawn by a -->
+                            <!--     pirate. -->
+                            <!-- </p> -->
                         </div>
                     </div>
                 </div>
-                <div class="BoxLeft-Back-GP">
-                    <img src="static/Icons-Left-LP.png" alt="Icons box right LP">
+                <div class="boxleft-back-GP">
+                    <img src="/static/Icons-Left-LP.png" alt="Icons box right LP">
                 </div>
-                <div class="BoxR_GP">
-                    <img src="static/Icons-Right-LP.png" alt="Icons box right LP">
+                <div class="boxr-GP">
+                    <img src="/static/Icons-Right-LP.png" alt="Icons box right LP">
                 </div>
                 <div class="boxbotton-input-GP">
                     <div class="inputframe-GP"><div class="inputtext-GP">
@@ -52,15 +56,21 @@
         </div>
     </body>
     <script>
-        let chatContext = [];
+  let chatContext = ["{{intro_text}}"];
 
         function sendMessage() {
+            let userInputField = document.getElementById("userInput");
             let userInput = document.getElementById("userInput").value.trim();
             if (!userInput) return;
+
+            let originalPlaceholder = userInputField.placeholder;
+            userInputField.placeholder = "Sending...";
+            userInputField.disabled = true;
+            userInputField.value = "..."; // Temporary spinner emoji
             
             chatContext.push(userInput);
             
-            fetch("/api/game1/do", {
+            fetch("/api/game/{{ game_id }}/do", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -72,12 +82,22 @@
             })
             .then(response => response.json())
             .then(data => {
-                let chatBox = document.getElementById("content");
+              let chatBox = document.getElementById("content");
+              chatContext.push(data.text)
               chatBox.innerHTML += `<p class="output-content-text">${userInput}</p>`
               chatBox.innerHTML += `<p class="output-content-text">${data.text}</p>`
-                document.getElementById("userInput").value = "";
+              userInputField.value = "";
+              userInputField.placeholder = originalPlaceholder;
+              userInputField.disabled = false;
+              userInputField.focus();
             })
-            .catch(error => console.error("Error:", error));
+            .catch(error => {
+
+              console.error("Error:", error)
+              userInputField.value = "";
+              userInputField.placeholder = "Error! Try again.";
+              userInputField.disabled = false;
+            });
         }
 
         document.addEventListener("DOMContentLoaded", () => {

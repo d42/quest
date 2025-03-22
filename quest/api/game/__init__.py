@@ -20,15 +20,15 @@ class GameResponse(BaseModel):
     text: str
 
 
-@router.post("/do")
-def do_action(request: GameRequest) -> GameResponse:
+@router.post("/{game_id}/do")
+def do_action(request: GameRequest, game_id: str) -> GameResponse:
     ll = LLM()
-    asd = ll.do_input(request.text)
+    asd = ll.do_input(request.text, context=request.context, game_id=game_id)
     return GameResponse(text=asd)
 
 
 @router.get("/image")
-def do_image(request: ImageRequest) -> GameResponse:
+def do_image(request: ImageRequest) -> str:
     ll = LLM()
     asd = ll.do_input(request.text)
     return GameResponse(text=asd)

@@ -1,6 +1,8 @@
 import json
 from logging import getLogger
+from typing import List
 from openai import OpenAI
+from quest import prompt
 from quest.core.config import settings
 from quest.core import types
 
@@ -86,14 +88,21 @@ class LLM:
             logger.exception("context: %s", context, exc_info=e)
             return ""
 
-    def do_input(self, text_input: str) -> str:
+    def do_input(self, text_input: str, context: List[str], game_id: str) -> str:
+        models = prompt.get_models()
+        model = models[game_id]
+        system_context = model.system_prompt
+
+        if context:
+            system_context += "your history of messages is as follows" + "\n".join(
+                context
+            )
         completion = self.client.chat.completions.create(
             model=settings.TEXT_MODEL,
-            max_completion_tokens=200,
             messages=[
                 {
-                    "role": "narrator",
-                    "content": "You're the narrator, create a story, which explains difficult crypto terminology, in a way that a five year old can understand, make the plot ironic",
+                    "role": "system",
+                    "content": system_context,
                 },
                 {
                     "role": "user",
