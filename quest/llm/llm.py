@@ -1,9 +1,15 @@
+import json
+from logging import getLogger
 from openai import OpenAI
 from quest.core.config import settings
+from quest.core import types
+
+
+logger = getLogger(__name__)
 
 
 class LLM:
-    clinet: OpenAI
+    client: OpenAI
 
     def __init__(self) -> None:
         self.client = OpenAI(
@@ -26,6 +32,59 @@ class LLM:
             ],
         )
         return completion.choices[0].message.content
+
+    def select_image_for_act(
+        self,
+        game: types.Games,
+        context: str,
+        text_input: str,
+    ) -> str:
+        if game == types.Games.game_test:
+            enum = ["ethereum.png", "bitcoin.png", "doge.png"]
+        else:
+            raise NotImplemented(game)
+
+        tool = {
+            "type": "function",
+            "function": {
+                "name": "select_best_image",
+                "description": "select best image for the current context",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "image": {
+                            "type": "string",
+                            "description": "one of the image names",
+                            "enum": enum,
+                        },
+                    },
+                    "required": ["image"],
+                },
+            },
+        }
+
+        response = self.client.chat.completions.create(
+            model=settings.TEXT_MODEL,
+            temperature=0.01,
+            messages=[
+                {
+                    "role": "system",
+                    "content": " Given the context, try to select a best fitting image",
+                },
+                {
+                    "role": "user",
+                    "content": context,
+                },
+            ],
+            tools=[tool],
+            tool_choice="required",
+        )
+        try:
+            arguments = response.choices[0].message.tool_calls[0].function.arguments
+            return json.loads(arguments)["image"]
+        except Exception as e:
+            logger.exception("context: %s", context, exc_info=e)
+            return ""
 
     def do_input(self, text_input: str) -> str:
         completion = self.client.chat.completions.create(

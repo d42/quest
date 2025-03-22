@@ -12,8 +12,12 @@ pydantic-settings = "^2.8.1"
 httpx = "^0.28.1"
 openai = "^1.68.2"
 fastapi = "^0.115.11"
-uvicorn = {extras = ["standard"], version = "^0.34.0"}
+uvicorn = { extras = ["standard"], version = "^0.34.0" }
 
+
+[tool.poetry.group.dev.dependencies]
+rich = "^13.9.4"
+pytest = "^8.3.5"
 
 [build-system]
 requires = ["poetry-core"]
