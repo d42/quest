@@ -10,7 +10,7 @@
             <div class="div">
                 <div class="boxmain-GP">
                     <div class="outputcontent-frame">
-                        <div class="outputcontent">
+                        <div class="outputcontent" id="content">
                             <p class="output-content-text">
                                 Once upon a time in a town called Coinville, little Billy found a strange-looking coin under his bed. It
                                 wasn’t gold or silver—it was glowing! He ran to his grandpa, Mr. Satoshi, and asked, “What is this?”<br />Mr.
@@ -43,9 +43,50 @@
                     <img src="static/Icons-Right-LP.png" alt="Icons box right LP">
                 </div>
                 <div class="boxbotton-input-GP">
-                    <div class="inputframe-GP"><div class="inputtext-GP">Input...</div></div>
+                    <div class="inputframe-GP"><div class="inputtext-GP">
+                      <input type="text" class="inputtext-GP" id="userInput" placeholder="Input...">
+                    </div>
+                </div>
                 </div>
             </div>
         </div>
     </body>
+    <script>
+        let chatContext = [];
+
+        function sendMessage() {
+            let userInput = document.getElementById("userInput").value.trim();
+            if (!userInput) return;
+            
+            chatContext.push(userInput);
+            
+            fetch("/api/game1/do", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    text: userInput,
+                    context: chatContext
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                let chatBox = document.getElementById("content");
+              chatBox.innerHTML += `<p class="output-content-text">${userInput}</p>`
+              chatBox.innerHTML += `<p class="output-content-text">${data.text}</p>`
+                document.getElementById("userInput").value = "";
+            })
+            .catch(error => console.error("Error:", error));
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            document.getElementById("userInput").addEventListener("keypress", function(event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    sendMessage();
+                }
+            });
+        });
+    </script>
 </html>

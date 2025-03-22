@@ -89,6 +89,7 @@ class LLM:
     def do_input(self, text_input: str) -> str:
         completion = self.client.chat.completions.create(
             model=settings.TEXT_MODEL,
+            max_completion_tokens=200,
             messages=[
                 {
                     "role": "narrator",

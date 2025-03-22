@@ -270,6 +270,12 @@
     top: 19px;
     left: 9px;
 }
+.inputtext-GP {
+    background: transparent;
+    border: none;  /* Removes the border */
+    outline: none;  /* Removes focus outline */
+    color: inherit; /* Keeps text color consistent */
+}
 
 .GAME-PAGE .inputtext-GP {
     position: relative;
